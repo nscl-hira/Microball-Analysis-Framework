@@ -9,6 +9,7 @@ PcmSuf    := _rdict.pcm
 
 OBJS := MBReader.$(ObjSuf) MBReaderData.$(ObjSuf) MBReaderCustomized.$(ObjSuf)
 OBJS += HTMicroballRootEvent.$(ObjSuf) MBCalibratedRootEvent.$(ObjSuf)
+OBJS += MBDetectorStatus.$(ObjSuf) MBGeometry.$(ObjSuf) MBHitCondition.$(ObjSuf) MBImpactParameter.$(ObjSuf)
 OBJS += shared.$(ObjSuf)
 DEPS := $(_OBJS:.$(ObjSuf)=.$(DepSuf))
 

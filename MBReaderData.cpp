@@ -6,6 +6,27 @@ void MBReader::BuildCalibratedEvent()
   HTMicroballData * Microball = fMicroball->Get();
 
   //Filling calibrated data structures
+  fMBCalibratedData.fmulti=0;
+  for(int i=0; i<Microball->fmulti; i++)
+  {
+    if(!IsBad(Microball->fnumring[i], Microball->fnumdet[i]) && IsHit(Microball->fnumring[i], Microball->fnumdet[i],Microball->fFast[i],Microball->fTail[i],Microball->fTime[i])) {
+      fMBCalibratedData.fnumring[fMBCalibratedData.fmulti] =Microball->fnumring[i];
+      fMBCalibratedData.fnumdet[fMBCalibratedData.fmulti]  =Microball->fnumdet[i];
+      fMBCalibratedData.fTail[fMBCalibratedData.fmulti]    =Microball->fTail[i];
+      fMBCalibratedData.fFast[fMBCalibratedData.fmulti]    =Microball->fFast[i];
+      fMBCalibratedData.fTime[fMBCalibratedData.fmulti]    =Microball->fTime[i];
+
+      fMBCalibratedData.fTheta[fMBCalibratedData.fmulti]   =GetTheta(Microball->fnumring[i], Microball->fnumdet[i]);
+      fMBCalibratedData.fPhi[fMBCalibratedData.fmulti]     =GetPhi(Microball->fnumring[i], Microball->fnumdet[i]);
+      fMBCalibratedData.fThetaRan[fMBCalibratedData.fmulti]=GetThetaRandom(Microball->fnumring[i], Microball->fnumdet[i]);
+      fMBCalibratedData.fPhiRan[fMBCalibratedData.fmulti]  =GetPhiRandom(Microball->fnumring[i], Microball->fnumdet[i]);
+
+      fMBCalibratedData.fmulti++;
+    }
+    //Microball Event Varaibles
+    fMBCalibratedData.fb     =GetImpactParameter(fMBCalibratedData.fmulti);
+    fMBCalibratedData.fbhat  =Getbhat(fMBCalibratedData.fmulti);
+  }
 }
 
 //____________________________________________________
@@ -20,7 +41,7 @@ void MBReader::BuildCalibratedTree(const char * file_name, Long64_t evt_amount)
   }
   // Initializing output TTree
   TTree * TreeOut = new TTree ("E15190", "Calibrated Data");
-  TreeOut->Branch("uBall.","MicroballCalibratedData",&fMBACalibratedData,32000,2);
+  TreeOut->Branch("uBall.","MicroballCalibratedData",&fMBCalibratedData,32000,2);
 
   TreeOut->SetAutoSave(5000000);
 

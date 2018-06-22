@@ -21,6 +21,10 @@
 #include <TCanvas.h>
 #include "HTMicroballRootEvent.h"
 #include "MBCalibratedRootEvent.h"
+#include "MBDetectorStatus.h"
+#include "MBGeometry.h"
+#include "MBHitCondition.h"
+#include "MBImpactParameter.h"
 
 #include "shared.h"
 
@@ -32,12 +36,18 @@ public :
   ~MBReader();
 
   int LoadGeometry(const char * file_name);
+  int LoadDetectorStatus(const char * file_name);
+  int LoadMBFastSlowHitCondition(const char * file_name);
+  int LoadMBCentrality(const char * file_name);
 
   double GetTheta(int num_ring, int num_det) const;
   double GetPhi(int num_ring, int num_det) const;
   double GetThetaRandom(int num_ring, int num_det) const;
   double GetPhiRandom(int num_ring, int num_det) const;
-  bool IsHit (double fast, double tail, int num_ring, int num_det) const;
+  double GetImpactParameter(int multiplicity) const;
+  double Getbhat(int multiplicity) const;
+  bool IsBad(int num_ring, int num_det) const;
+  bool IsHit (int num_ring, int num_det, double fast, double tail, double time) const;
 
   // Examples
   void   Loop(const char *, Long64_t evt_amount=0);
@@ -55,7 +65,7 @@ private :
   TTreeReaderValue<HTMicroballData> *fMicroball;
   TTreeReaderValue<MicroballCalibratedData> *fMicroballCal;
 
-  MicroballCalibratedData fMBACalibratedData;
+  MicroballCalibratedData fMBCalibratedData;
 
   TChain      * fChain;
 
@@ -66,7 +76,14 @@ private :
   bool fIsMB;
   bool fIsDataCalibrated;
   bool fGeometryLoaded;
+  bool fStatusLoaded;
   bool fHitConditionLoaded;
+  bool fCentralityLoaded;
+
+  MBDetectorStatus * fMicroballStatus;
+  MBGeometry * fMicroballGeometry;
+  MBHitCondition * fMicroballHitCondition;
+  MBImpactParameter * fMicroballCentrality;
 };
 
 #endif

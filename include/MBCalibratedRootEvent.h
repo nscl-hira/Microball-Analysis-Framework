@@ -17,6 +17,11 @@ public:
 
   Double_t *fTheta;       //[fmulti]
   Double_t *fPhi;         //[fmulti]
+  Double_t *fThetaRan;    //[fmulti]
+  Double_t *fPhiRan;      //[fmulti]  
+
+  Double_t fb;
+  Double_t fbhat;
 
   MicroballCalibratedData(int);
   MicroballCalibratedData();

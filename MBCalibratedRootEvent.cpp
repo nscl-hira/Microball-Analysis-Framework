@@ -12,6 +12,8 @@ fmulti(0)
 
   fTheta   =new Double_t[NUM_DETS_MICROBALL];
   fPhi     =new Double_t[NUM_DETS_MICROBALL];
+  fThetaRan=new Double_t[NUM_DETS_MICROBALL];
+  fPhiRan  =new Double_t[NUM_DETS_MICROBALL]; 
 }
 
 //________________________________________________
