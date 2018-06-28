@@ -35,8 +35,8 @@ public :
   MBReader(TChain * Chain=0, bool IsDataCalibrated=0, const char * DataType="MB");
   ~MBReader();
 
-  int LoadGeometry(const char * file_name);
-  int LoadDetectorStatus(const char * file_name);
+  int LoadMBGeometry(const char * file_name);
+  int LoadMBDetectorStatus(const char * file_name);
   int LoadMBFastSlowHitCondition(const char * file_name);
   int LoadMBCentrality(const char * file_name);
 
@@ -75,10 +75,10 @@ private :
 
   bool fIsMB;
   bool fIsDataCalibrated;
-  bool fGeometryLoaded;
-  bool fStatusLoaded;
-  bool fHitConditionLoaded;
-  bool fCentralityLoaded;
+  bool fMBGeometryLoaded;
+  bool fMBStatusLoaded;
+  bool fMBHitConditionLoaded;
+  bool fMBCentralityLoaded;
 
   MBDetectorStatus * fMicroballStatus;
   MBGeometry * fMicroballGeometry;

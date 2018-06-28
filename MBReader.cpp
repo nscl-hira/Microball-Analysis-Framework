@@ -8,10 +8,14 @@ fRadToDeg(180./TMath::Pi()),
 fSpeedOfLight(29.9792),
 fIsMB(false),
 fIsDataCalibrated(IsDataCalibrated),
-fGeometryLoaded(false),
-fStatusLoaded(false),
-fHitConditionLoaded(false),
-fCentralityLoaded(false)
+fMBGeometryLoaded(false),
+fMBStatusLoaded(false),
+fMBHitConditionLoaded(false),
+fMBCentralityLoaded(false),
+fMicroballStatus(new MBDetectorStatus()),
+fMicroballGeometry(new MBGeometry()),
+fMicroballHitCondition(new MBHitCondition()),
+fMicroballCentrality(new MBImpactParameter())
 {
   //Parsing DataType string to allocate specific detectors
   std::string DetectorsIncluded(DataType);
@@ -29,11 +33,6 @@ fCentralityLoaded(false)
       if(fIsMB) fMicroballCal = new TTreeReaderValue<MicroballCalibratedData>(*fMBReader, "uBall.");
     }
   }
-
-  fMicroballStatus = new MBDetectorStatus();
-  fMicroballGeometry = new MBGeometry();
-  fMicroballHitCondition = new MBHitCondition();
-  fMicroballCentrality = new MBImpactParameter();
 }
 
 //____________________________________________________
@@ -50,30 +49,30 @@ MBReader::~MBReader()
 }
 
 //____________________________________________________
-int MBReader::LoadGeometry(const char * file_name)
+int MBReader::LoadMBGeometry(const char * file_name)
 {
   int NLines=fMicroballGeometry->LoadGeometry(file_name);
   if(NLines>0) {
-    fGeometryLoaded=true;
+    fMBGeometryLoaded=true;
     printf("Loaded Microball geometry from file %s\n", file_name);
     return NLines;
   } else {
-    fGeometryLoaded=false;
+    fMBGeometryLoaded=false;
     printf("Error: Error while loading Microball geometry %s\n", file_name);
     return -1;
   }
 }
 
 //____________________________________________________
-int MBReader::LoadDetectorStatus(const char * file_name)
+int MBReader::LoadMBDetectorStatus(const char * file_name)
 {
   int NLines=fMicroballStatus->LoadBadDetectors(file_name);
   if(NLines>0) {
-    fStatusLoaded=true;
+    fMBStatusLoaded=true;
     printf("Loaded Microball status from file %s\n", file_name);
     return NLines;
   } else {
-    fStatusLoaded=false;
+    fMBStatusLoaded=false;
     printf("Error: Error while loading Microball status %s\n", file_name);
     return -1;
   }
@@ -84,11 +83,11 @@ int MBReader::LoadMBFastSlowHitCondition(const char * file_name)
 {
   int NLines=fMicroballHitCondition->LoadFastSlowCuts(file_name);
   if(NLines>0) {
-    fHitConditionLoaded=true;
+    fMBHitConditionLoaded=true;
     printf("Loaded Microball Fast Slow Hit conditions from file %s\n", file_name);
     return NLines;
   } else {
-    fHitConditionLoaded=false;
+    fMBHitConditionLoaded=false;
     printf("Error: Error while loading Microball Fast Slow Hit conditions %s\n", file_name);
     return -1;
   }
@@ -99,11 +98,11 @@ int MBReader::LoadMBCentrality(const char * file_name)
 {
   int NLines=fMicroballCentrality->LoadImpactParameter(file_name);
   if(NLines>0) {
-    fCentralityLoaded=true;
+    fMBCentralityLoaded=true;
     printf("Loaded Microball centrality conditions from file %s\n", file_name);
     return NLines;
   } else {
-    fCentralityLoaded=false;
+    fMBCentralityLoaded=false;
     printf("Error: Error while loading Microball centrality conditions %s\n", file_name);
     return -1;
   }
@@ -112,49 +111,49 @@ int MBReader::LoadMBCentrality(const char * file_name)
 //____________________________________________________
 double MBReader::GetTheta(int num_ring, int num_det) const
 {
-  return fGeometryLoaded ? fMicroballGeometry->GetTheta(num_ring, num_det) : -9999;
+  return fMBGeometryLoaded ? fMicroballGeometry->GetTheta(num_ring, num_det) : -9999;
 }
 
 //____________________________________________________
 double MBReader::GetPhi(int num_ring, int num_det) const
 {
-  return fGeometryLoaded ? fMicroballGeometry->GetPhi(num_ring, num_det) : -9999;
+  return fMBGeometryLoaded ? fMicroballGeometry->GetPhi(num_ring, num_det) : -9999;
 }
 
 //____________________________________________________
 double MBReader::GetThetaRandom(int num_ring, int num_det) const
 {
-  return fGeometryLoaded ? fMicroballGeometry->GetThetaRandom(num_ring, num_det) : -9999;
+  return fMBGeometryLoaded ? fMicroballGeometry->GetThetaRandom(num_ring, num_det) : -9999;
 }
 
 //____________________________________________________
 double MBReader::GetPhiRandom(int num_ring, int num_det) const
 {
-  return fGeometryLoaded ? fMicroballGeometry->GetPhiRandom(num_ring, num_det) : -9999;
+  return fMBGeometryLoaded ? fMicroballGeometry->GetPhiRandom(num_ring, num_det) : -9999;
 }
 
 //____________________________________________________
 double MBReader::GetImpactParameter(int multiplicity) const
 {
-  return fCentralityLoaded ? fMicroballCentrality->GetImpactParameter(multiplicity) : -9999;
+  return fMBCentralityLoaded ? fMicroballCentrality->GetImpactParameter(multiplicity) : -9999;
 }
 
 //____________________________________________________
 double MBReader::Getbhat(int multiplicity) const
 {
-  return fCentralityLoaded ? fMicroballCentrality->Getbhat(multiplicity) : -9999;
+  return fMBCentralityLoaded ? fMicroballCentrality->Getbhat(multiplicity) : -9999;
 }
 
 //____________________________________________________
 bool MBReader::IsBad (int num_ring, int num_det) const
 {
-  return fStatusLoaded ? fMicroballStatus->IsBad(num_ring,num_det) : false;
+  return fMBStatusLoaded ? fMicroballStatus->IsBad(num_ring,num_det) : false;
 }
 
 //____________________________________________________
 bool MBReader::IsHit (int num_ring, int num_det, double fast, double tail, double time) const
 {
-  return fHitConditionLoaded ? fMicroballHitCondition->IsHit(num_ring,num_det,fast,tail,time) : false;
+  return fMBHitConditionLoaded ? fMicroballHitCondition->IsHit(num_ring,num_det,fast,tail,time) : false;
 }
 
 //____________________________________________________

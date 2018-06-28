@@ -36,8 +36,8 @@ int main (int argc, char ** argv)
   }
 
   MBReader MBAnalyzer(dataChain);
-  MBAnalyzer.LoadGeometry("calibrations/MB_Geometry.dat");
-  MBAnalyzer.LoadDetectorStatus("calibrations/MB_BadOrMissingDetectors.dat");
+  MBAnalyzer.LoadMBGeometry("calibrations/MB_Geometry.dat");
+  MBAnalyzer.LoadMBDetectorStatus("calibrations/MB_BadOrMissingDetectors.dat");
   MBAnalyzer.LoadMBFastSlowHitCondition("calibrations/MB_FastSlowCuts_2626.root");
   MBAnalyzer.LoadMBCentrality("calibrations/MB_ImpactParameter_48Ca_64Ni_140AMeV.dat");
 
